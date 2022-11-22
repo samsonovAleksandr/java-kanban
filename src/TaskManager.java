@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class TuskManager {
+public class TaskManager {
 
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
@@ -10,7 +10,6 @@ public class TuskManager {
     private int newId() {
         return ++i;
     }
-
 
     public void createTask(Task task) {
         task.setId(newId());
@@ -23,17 +22,15 @@ public class TuskManager {
     }
 
     public void createSubTask(SubTask subTask) {
-        int subTaskId = this.newId();
-
-        subTask.setId(subTaskId);
-        subTasks.put(subTaskId, subTask);
+        subTask.setId(newId());
+        subTasks.put(subTask.getId(), subTask);
 
         int epicIdOfSubTask = subTask.getEpicId();
 
         Epic epic = epics.get(epicIdOfSubTask);
         if (epic != null) {
             epic.addSubTaskId(subTask);
-            this.setEpicStatus(epics.get(subTask.getEpicId()));
+            this.updateEpicStatus(epics.get(subTask.getEpicId()));
         }
     }
 
@@ -45,7 +42,7 @@ public class TuskManager {
         return epics.values();
     }
 
-    public ArrayList<SubTask> getSubTask(int epicId) {
+    public Collection<SubTask> getSubTasksByEpicId(int epicId) {
         Epic epic = epics.get(epicId);
         ArrayList<SubTask> subTaskArrayList = new ArrayList<>();
         List<Integer> subtasksFromEpic = epic.getSubTaskId();
@@ -81,18 +78,14 @@ public class TuskManager {
 
         Epic epic = epics.get(epicIdOfSubTask);
         subTasks.remove(subtaskId);
-        List<Integer> subtasksFromEpic = epic.getSubTaskId();
-        for (int i = 0; i < subtasksFromEpic.size(); i++) {
-            if (subtasksFromEpic.get(i) == subtaskId) {
-                epic.removeSubTaskID(i);
-            }
-
-        }
-
-        this.setEpicStatus(epic);
+        epic.getSubTaskId().remove(Integer.valueOf(subtaskId));
+        updateEpicStatus(epic);
     }
 
-    public void deleteAllSubtasks() {
+    public void deleteAllSubTasks() {
+        for (Epic epic : getEpics()) {
+            epic.getSubTaskId().clear();
+        }
         subTasks.clear();
     }
 
@@ -118,49 +111,29 @@ public class TuskManager {
         }
     }
 
-    public void updateTask(Task task) {
-        int idUpdTask = -1;
-        for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
-            if (Objects.equals(entry.getValue().getName(), task.getName()))
-                idUpdTask = entry.getValue().getId();
-        }
-        if (idUpdTask >= 0) {
-            task.setId(idUpdTask);
-            tasks.put(idUpdTask, task);
+    public void updateTask(Task task, int i) {
+        if (tasks.containsKey(i)) {
+            task.setId(i);
+            tasks.put(i, task);
         }
     }
 
-
-    public void updateEpic(Epic epic) {
-        int idEpic = -1;
-        for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
-            if (Objects.equals(entry.getValue().getName(), epic.getName()))
-                idEpic = entry.getValue().getId();
-        }
-        if (idEpic >= 0) {
-            epic.setId(idEpic);
-            for (int i = 0; i < epics.get(idEpic).getSubTaskId().size(); i++) {
-                SubTask subTask = subTasks.get(epics.get(idEpic).getSubTaskId().get(i));
-                epic.addSubTaskId(subTask);
-            }
-            epics.put(idEpic, epic);
+    public void updateEpic(Epic epic, int i) {
+        if (epics.containsKey(i)) {
+            epic.setId(i);
+            tasks.put(i, epic);
         }
     }
 
-    public void updateSubtask(SubTask subTask) {
-        int idUpdSubtask = -1;
-        for (Map.Entry<Integer, SubTask> entry : subTasks.entrySet()) {
-            if (Objects.equals(entry.getValue().getName(), subTask.getName()))
-                idUpdSubtask = entry.getValue().getId();
-        }
-        if (idUpdSubtask >= 0) {
-            subTask.setId(idUpdSubtask);
-            subTasks.put(idUpdSubtask, subTask);
-            this.setEpicStatus(epics.get(subTask.getEpicId()));
+    public void updateSubtask(SubTask subTask, int i) {
+        if (subTasks.containsKey(i)) {
+            subTask.setId(i);
+            subTasks.put(i, subTask);
+            updateEpicStatus(epics.get(subTask.getEpicId()));
         }
     }
 
-    private void setEpicStatus(Epic epic) {
+    private void updateEpicStatus(Epic epic) {
         TaskStatus oldTaskStatus = epic.getStatus();
         ArrayList<SubTask> subTasksUpd = new ArrayList<>();
         for (int i = 0; i < epic.getSubTaskId().size(); i++) {
@@ -182,12 +155,10 @@ public class TuskManager {
             }
         }
 
-        if (subTasksUpd.size() == 0) {
+        if ((subTasksUpd.size() == 0) || (counterNew == subTasksUpd.size())) {
             epic.setStatus(TaskStatus.NEW);
         } else if (counterDone == subTasksUpd.size()) {
             epic.setStatus(TaskStatus.DONE);
-        } else if (counterNew == subTasksUpd.size()) {
-            epic.setStatus(oldTaskStatus);
         } else {
             epic.setStatus(TaskStatus.IN_PROGRESS);
         }
@@ -197,7 +168,7 @@ public class TuskManager {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TuskManager that = (TuskManager) o;
+        TaskManager that = (TaskManager) o;
         return i == that.i && tasks.equals(that.tasks) && epics.equals(that.epics) && subTasks.equals(that.subTasks);
     }
 

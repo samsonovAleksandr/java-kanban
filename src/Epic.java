@@ -12,9 +12,11 @@ public class Epic extends Task {
     public void addSubTaskId(SubTask subTask) {
         subTaskId.add(subTask.getId());
     }
+
     public void removeSubTaskID(int subTaskId) {
         this.subTaskId.remove(subTaskId);
     }
+
     public List<Integer> getSubTaskId() {
         return subTaskId;
     }
