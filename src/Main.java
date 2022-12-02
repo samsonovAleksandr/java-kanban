@@ -39,9 +39,8 @@ public class Main {
         taskManager.getEpicByID(3);
         taskManager.getTaskByID(1);
         taskManager.getTaskByID(2);
-
-        System.out.println(Managers.getDefaultHistory());
-        System.out.println(Managers.getDefaultHistory().getHistory().size());
+        System.out.println(taskManager.getHistory());
+        System.out.println(taskManager.getHistory().getHistory().size());
 
 
     }
