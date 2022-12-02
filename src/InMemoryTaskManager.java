@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    HistoryManager historyManager = new InMemoryHistoryManager();
+    private HistoryManager historyManager = new InMemoryHistoryManager();
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, SubTask> subTasks = new HashMap<>();
@@ -64,20 +64,23 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskByID(int taskId) {
-        historyManager.add(tasks.get(taskId));
-        return tasks.get(taskId);
+        Task task = tasks.get(taskId);
+        historyManager.add(task);
+        return task;
     }
 
     @Override
     public Epic getEpicByID(int epicId) {
-     historyManager.add(epics.get(epicId));
-        return epics.get(epicId);
+        Epic epic = epics.get(epicId);
+        historyManager.add(epic);
+        return epic;
     }
 
     @Override
     public SubTask getSubtaskByID(int subtaskId) {
-      historyManager.add(subTasks.get(subtaskId));
-        return subTasks.get(subtaskId);
+        SubTask subTask = subTasks.get(subtaskId);
+        historyManager.add(subTask);
+        return subTask;
     }
 
     @Override
