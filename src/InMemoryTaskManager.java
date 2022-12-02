@@ -9,6 +9,11 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
+    public void getHistory() {
+        historyManager.getHistory();
+    }
+
+    @Override
     public int newId() {
         return ++i;
     }
@@ -39,7 +44,7 @@ public class InMemoryTaskManager implements TaskManager {
             this.updateEpicStatus(epics.get(subTask.getEpicId()));
         }
     }
-
+    @Override
     public Collection<Task> getTasks() {
         return tasks.values();
     }
