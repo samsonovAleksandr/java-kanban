@@ -1,7 +1,7 @@
 import java.util.*;
 
 public interface TaskManager {
-    HistoryManager getHistory();
+    List<Task> getHistory();
 
     int newId();
 

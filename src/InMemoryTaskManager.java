@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private HistoryManager historyManager = new InMemoryHistoryManager();
+    private HistoryManager historyManager = Managers.getDefaultHistory();
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, SubTask> subTasks = new HashMap<>();
@@ -9,8 +9,8 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public HistoryManager getHistory() {
-      return Managers.getDefaultHistory();
+    public List<Task> getHistory() {
+      return historyManager.getHistory();
     }
 
     @Override

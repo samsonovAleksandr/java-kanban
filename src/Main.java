@@ -11,36 +11,29 @@ public class Main {
         taskManager.createEpic(new Epic("Подготовка к походу", TaskStatus.NEW, "Собрать вещи"));
         taskManager.createSubTask(new SubTask("Собрать рюкзак", TaskStatus.NEW,
                 "Положить одежду и посуду", 6));
-        System.out.println(taskManager.getTasks());
-        System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getSubtaskByID(5));
-        taskManager.updateTask(new Task("Погулять с собакой", TaskStatus.IN_PROGRESS, "Выйти в 4 часа"), 1);
-        taskManager.updateEpic(new Epic("Подготовка к походу", TaskStatus.IN_PROGRESS, "Купить компас"), 6);
-        System.out.println(taskManager.getTaskByID(1));
-        System.out.println(taskManager.getEpics());
-       taskManager.updateSubtask(new SubTask("Собрать рюкзак", TaskStatus.DONE, "Положить полотенце",
-               6), 7);
-        System.out.println(taskManager.getEpics());
-       // taskManager.deleteAllSubTasks();
-        System.out.println(taskManager.getSubtaskByID(4));
-      //  taskManager.deleteTaskById(1);
-     //   taskManager.deleteEpicById(3);
+
         taskManager.getTaskByID(1);
-        taskManager.getTaskByID(2);
-        taskManager.getTaskByID(1);
-        taskManager.getTaskByID(2);
-        taskManager.getEpicByID(3);
-        taskManager.getSubtaskByID(4);
-        taskManager.getSubtaskByID(5);
-        taskManager.getEpicByID(6);
-        taskManager.getSubtaskByID(7);
-        taskManager.getTaskByID(1);
-        taskManager.getTaskByID(2);
-        taskManager.getEpicByID(3);
-        taskManager.getTaskByID(1);
+        System.out.println(taskManager.getHistory());
         taskManager.getTaskByID(2);
         System.out.println(taskManager.getHistory());
-        System.out.println(taskManager.getHistory().getHistory().size());
+        taskManager.getEpicByID(3);
+        System.out.println(taskManager.getHistory());
+        taskManager.getSubtaskByID(4);
+        System.out.println(taskManager.getHistory());
+        taskManager.getSubtaskByID(5);
+        System.out.println(taskManager.getHistory());
+        taskManager.getEpicByID(6);
+        System.out.println(taskManager.getHistory());
+        taskManager.getSubtaskByID(7);
+        System.out.println(taskManager.getHistory());
+        taskManager.getTaskByID(1);
+        System.out.println(taskManager.getHistory());
+        taskManager.getTaskByID(2);
+        System.out.println(taskManager.getHistory());
+        taskManager.getEpicByID(3);
+        System.out.println(taskManager.getHistory());
+        taskManager.getSubtaskByID(4);
+        System.out.println(taskManager.getHistory());
 
 
     }
