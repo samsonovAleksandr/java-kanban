@@ -3,8 +3,6 @@ import java.util.*;
 public interface TaskManager {
     List<Task> getHistory();
 
-    int newId();
-
     void createTask(Task task);
 
     void createEpic(Epic epic);
@@ -42,7 +40,5 @@ public interface TaskManager {
     void updateEpic(Epic epic, int i);
 
     void updateSubtask(SubTask subTask, int i);
-
-    void updateEpicStatus(Epic epic);
 
 }
