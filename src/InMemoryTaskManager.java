@@ -14,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-    public int newId() {
+    private int newId() {
         return ++i;
     }
 
@@ -115,19 +115,18 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllSubTasks() {
-        for (Epic epic : getEpics()) {
-            historyManager.remove(epic.getId());
-            epic.getSubTaskId().clear();
+        for (Integer del : subTasks.keySet()) {
+            historyManager.remove(del);
         }
         subTasks.clear();
     }
 
     @Override
     public void deleteAllEpics() {
-        for (Integer del : epics.keySet()){
+        for (Integer del : epics.keySet()) {
             historyManager.remove(del);
         }
-        for (Integer del : subTasks.keySet()){
+        for (Integer del : subTasks.keySet()) {
             historyManager.remove(del);
         }
         epics.clear();
@@ -177,7 +176,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public void updateEpicStatus(Epic epic) {
+    private void updateEpicStatus(Epic epic) {
         ArrayList<SubTask> subTasksUpd = new ArrayList<>();
         for (int i = 0; i < epic.getSubTaskId().size(); i++) {
             subTasksUpd.add(subTasks.get(epic.getSubTaskId().get(i)));
