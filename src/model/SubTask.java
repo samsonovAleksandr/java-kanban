@@ -3,11 +3,22 @@ package model;
 import java.util.Objects;
 
 public class SubTask extends Task {
-    private int epicId;
+    protected int epicId;
+    protected TaskEnum taskEnum;
 
     public SubTask(String name, TaskStatus status, String description, int epicId) {
         super(name, status, description);
         this.epicId = epicId;
+    }
+
+    public SubTask(int id, String name, TaskStatus status, String description, int epicId) {
+        super(id, name, status, description);
+        this.epicId = epicId;
+    }
+
+    @Override
+    public TaskEnum getTaskEnum() {
+        return TaskEnum.SUB_TASK;
     }
 
     public int getEpicId() {

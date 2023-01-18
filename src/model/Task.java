@@ -7,11 +7,25 @@ public class Task {
     protected String name;
     protected TaskStatus status;
     protected String description;
+    protected TaskEnum taskEnum;
 
     public Task(String name, TaskStatus status, String description) {
         this.name = name;
         this.status = status;
         this.description = description;
+    }
+        public Task(int id, String name, TaskStatus status, String description) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+    }
+    public TaskEnum getTaskEnum() {
+        return TaskEnum.TASK;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public int getId() {
