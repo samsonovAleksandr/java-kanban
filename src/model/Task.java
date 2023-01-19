@@ -14,12 +14,14 @@ public class Task {
         this.status = status;
         this.description = description;
     }
-        public Task(int id, String name, TaskStatus status, String description) {
+
+    public Task(int id, String name, TaskStatus status, String description) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.description = description;
     }
+
     public TaskEnum getTaskEnum() {
         return TaskEnum.TASK;
     }
@@ -64,7 +66,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "model.Task{" +
+        return "Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", status=" + status +

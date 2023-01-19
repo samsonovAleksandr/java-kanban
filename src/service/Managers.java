@@ -1,8 +1,4 @@
-package controlles;
-
-import controlles.HistoryManager;
-import controlles.InMemoryHistoryManager;
-import controlles.InMemoryTaskManager;
+package service;
 
 public abstract class Managers implements TaskManager {
 

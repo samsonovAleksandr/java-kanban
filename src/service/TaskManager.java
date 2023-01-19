@@ -1,10 +1,11 @@
-package controlles;
+package service;
 
 import model.Epic;
 import model.SubTask;
 import model.Task;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 public interface TaskManager {
     List<Task> getHistory();

@@ -1,6 +1,5 @@
-package controlles;
+package service;
 
-import controlles.HistoryManager;
 import model.Task;
 
 import java.util.ArrayList;
@@ -75,12 +74,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         return getTasks();
     }
 
-    @Override
-    public String toString() {
-        return "controlles.InMemoryHistoryManager{" +
-                "hist=" + hist +
-                '}';
-    }
     private class Node {
 
         private Task data;

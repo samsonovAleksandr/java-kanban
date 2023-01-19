@@ -1,52 +1,18 @@
-package controlles;
+package service;
 
 import model.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    File file;
-
+    private final File file;
 
     public FileBackedTasksManager(File file) {
         this.file = file;
-    }
-
-    public static void main(String[] args) {
-        FileBackedTasksManager taskManager = new FileBackedTasksManager(new File("src/resources/history.csv"));
-        taskManager.createTask(new Task("Погулять с собакой", TaskStatus.NEW, "Выйти в 6 вечера"));
-        taskManager.createTask(new Task("Купить инструмент", TaskStatus.NEW, "Гаечные ключи"));
-        taskManager.createEpic(new Epic("Генеральная уборка", TaskStatus.NEW, "Убрать квартиру"));
-        taskManager.createSubTask(new SubTask("Помыть ванную", TaskStatus.NEW, "Помыть полки",
-                3));
-        taskManager.createSubTask(new SubTask("Убрать кухню",
-                TaskStatus.NEW, "Разложить тарелки из посудомойки", 3));
-        taskManager.createSubTask(new SubTask("Убрать Комнату",
-                TaskStatus.NEW, "Пропылесосить", 3));
-        taskManager.createEpic(new Epic("Подготовка к походу", TaskStatus.NEW, "Собрать вещи"));
-        taskManager.getTaskByID(1);
-        taskManager.getEpicByID(3);
-        taskManager.getSubTasksByEpicId(3);
-        taskManager.getTaskByID(2);
-        taskManager.getTaskByID(1);
-
-
-      /* FileBackedTasksManager taskManager = loadFromFile(new File("src/resources/history.csv"));
-
-
-        System.out.println(taskManager.getTasks());
-        System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getHistory());*/
-
     }
 
     private void save() {
@@ -71,27 +37,30 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             bufferedWriter.append(historyToString(historyManager));
 
         } catch (IOException e) {
-            try {
-                throw new ManagerSaveException("Ошибка сохранения в файл.");
-            } catch (ManagerSaveException ex) {
-                throw new RuntimeException(ex);
-            }
+            throw new ManagerSaveException("Ошибка сохранения в файл.", e);
+        } catch (ManagerSaveException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
-
     }
 
     public Task fromString(String value) {
         String[] str = value.split(",");
-        switch (str[1]) {
-            case ("TASK"):
-                return new Task(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4]);
-            case ("EPIC_TASK"):
-                return new Epic(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4]);
-            case ("SUB_TASK"):
-                return new SubTask(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4],
-                        Integer.parseInt(str[5]));
+        int id = Integer.parseInt(str[0]);
+        TaskEnum taskEnum = TaskEnum.valueOf(str[1]);
+        String name = str[2];
+        TaskStatus taskStatus = TaskStatus.valueOf(str[3]);
+        String description = str[4];
+        switch (taskEnum) {
+            case TASK:
+                return new Task(id, name, taskStatus, description);
+            case EPIC_TASK:
+                return new Epic(id, name, taskStatus, description);
+            case SUB_TASK:
+                int epicId = Integer.parseInt(str[5]);
+                return new SubTask(id, name, taskStatus, description, epicId);
+            default:
+                throw new RuntimeException("Ошибка.");
         }
-        return null;
     }
 
     static List<Integer> historyFromString(String value) {
@@ -153,11 +122,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 historyManager.add(subTasks.get(task));
             }
         }
-    }
-
-
-    public File getFile() {
-        return file;
     }
 
     private String toString(Task task) {
@@ -312,20 +276,5 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public void updateSubtask(SubTask subTask, int i) {
         super.updateSubtask(subTask, i);
         save();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 }

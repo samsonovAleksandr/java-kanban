@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
-    protected final List<Integer> subTaskId = new ArrayList<>();
+    private final List<Integer> subTaskId = new ArrayList<>();
 
 
     public Epic(String name, TaskStatus status, String description) {
@@ -49,7 +49,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "model.Epic{" +
+        return "Epic{" +
                 "subTaskId=" + subTaskId +
                 ", id=" + id +
                 ", name='" + name + '\'' +

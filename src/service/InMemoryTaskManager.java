@@ -1,4 +1,4 @@
-package controlles;
+package service;
 
 import model.Epic;
 import model.SubTask;
@@ -21,10 +21,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-    protected int newId() {
+    private int newId() {
         return ++i;
     }
-
 
     @Override
     public void createTask(Task task) {
@@ -186,7 +185,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    protected void updateEpicStatus(Epic epic) {
+    private void updateEpicStatus(Epic epic) {
         ArrayList<SubTask> subTasksUpd = new ArrayList<>();
         for (int i = 0; i < epic.getSubTaskId().size(); i++) {
             subTasksUpd.add(subTasks.get(epic.getSubTaskId().get(i)));
@@ -229,13 +228,4 @@ public class InMemoryTaskManager implements TaskManager {
         return Objects.hash(tasks, epics, subTasks, i);
     }
 
-    @Override
-    public String toString() {
-        return "controlles.InMemoryTaskManager{" +
-                ", tasks=" + tasks +
-                ", epics=" + epics +
-                ", subTasks=" + subTasks +
-                ", i=" + i +
-                '}';
-    }
 }

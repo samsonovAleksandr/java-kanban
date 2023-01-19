@@ -3,7 +3,7 @@ package model;
 import java.util.Objects;
 
 public class SubTask extends Task {
-    protected int epicId;
+    private final int epicId;
     protected TaskEnum taskEnum;
 
     public SubTask(String name, TaskStatus status, String description, int epicId) {
