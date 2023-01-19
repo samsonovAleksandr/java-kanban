@@ -38,8 +38,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка сохранения в файл.", e);
-        } catch (ManagerSaveException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
         }
     }
 
