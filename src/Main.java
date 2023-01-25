@@ -26,6 +26,7 @@ public class Main {
         taskManager.getSubTasksByEpicId(3);
         taskManager.getTaskByID(2);
         taskManager.getTaskByID(1);
+        taskManager.getTaskByID(1);
 
 
        /* FileBackedTasksManager taskManager = loadFromFile(new File("src/resources/history.csv"));
