@@ -10,7 +10,7 @@ import static service.FileBackedTasksManager.loadFromFile;
 
 public class Main {
     public static void main(String[] args) {
-        FileBackedTasksManager taskManager = new FileBackedTasksManager(new File("src/resources/history.csv"));
+      /*  FileBackedTasksManager taskManager = new FileBackedTasksManager(new File("src/resources/history.csv"));
         taskManager.createTask(new Task("Погулять с собакой", TaskStatus.NEW, "Выйти в 6 вечера"));
         taskManager.createTask(new Task("Купить инструмент", TaskStatus.NEW, "Гаечные ключи"));
         taskManager.createEpic(new Epic("Генеральная уборка", TaskStatus.NEW, "Убрать квартиру"));
@@ -26,15 +26,15 @@ public class Main {
         taskManager.getSubTasksByEpicId(3);
         taskManager.getTaskByID(2);
         taskManager.getTaskByID(1);
-        taskManager.getTaskByID(1);
+        taskManager.getTaskByID(1); */
 
 
-       /* FileBackedTasksManager taskManager = loadFromFile(new File("src/resources/history.csv"));
+        FileBackedTasksManager taskManager = loadFromFile(new File("src/resources/history.csv"));
 
 
         System.out.println(taskManager.getTasks());
         System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getHistory()); */
+        System.out.println(taskManager.getHistory());
 
     }
 }

@@ -1,10 +1,7 @@
 id,type,name,status,description,epic
-1,TASK,Погулять с собакой,NEW,Выйти в 6 вечера,
-2,TASK,Купить инструмент,NEW,Гаечные ключи,
-3,EPIC_TASK,Генеральная уборка,NEW,Убрать квартиру,
-7,EPIC_TASK,Подготовка к походу,NEW,Собрать вещи,
-4,SUB_TASK,Помыть ванную,NEW,Помыть полки,3
-5,SUB_TASK,Убрать кухню,NEW,Разложить тарелки из посудомойки,3
-6,SUB_TASK,Убрать Комнату,NEW,Пропылесосить,3
+1,TASK,test,NEW,TestDes,
+2,TASK,test,NEW,TestDes,
+3,EPIC_TASK,test,NEW,TestDes,
+4,SUB_TASK,test,NEW,TestDes,3
 
-3,2,1,
+1,3,
