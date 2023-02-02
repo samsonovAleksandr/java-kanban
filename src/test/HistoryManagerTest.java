@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.*;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class HistoryManagerTest {
@@ -24,11 +26,14 @@ class HistoryManagerTest {
     void beforeEach() {
         taskManager = new InMemoryTaskManager();
         historyManager = Managers.getDefaultHistory();
-        task = new Task("test", TaskStatus.NEW, "TestDes");
-        task1 = new Task("test", TaskStatus.NEW, "TestDes");
+        task = new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01,31,18,00), 60);
+        task1 = new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01,31,18,00), 60);
         epic = new Epic("test", TaskStatus.NEW, "TestDes");
         epic1 = new Epic("test", TaskStatus.NEW, "TestDes");
-        subTask = new SubTask("test", TaskStatus.NEW, "TestDes", 3);
+        subTask = new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01,31,18,00), 60, 3);
         taskManager.createTask(task);
         taskManager.createTask(task1);
         taskManager.createEpic(epic);

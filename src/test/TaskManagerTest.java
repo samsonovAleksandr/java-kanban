@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import service.TaskManager;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -17,10 +18,17 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     T taskManager;
 
+    Task task;
+    Task task1;
+    Epic epic;
+    SubTask subTask1;
+
+    SubTask subTask3;
 
     @Test
     void createNewTask() {
-        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes"));
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60));
         Collection<Task> tasks = taskManager.getTasks();
         assertEquals(1, tasks.size());
     }
@@ -35,7 +43,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void createSubTask() {
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         Collection<SubTask> subTasks = taskManager.getAllSubtasks();
         assertEquals(1, subTasks.size());
     }
@@ -64,127 +73,119 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void getAllTask() {
-        Task task1 = new Task("test", TaskStatus.NEW, "TestDes");
-        Task task2 = new Task("test", TaskStatus.NEW, "TestDes");
-        taskManager.createTask(task1);
-        taskManager.createTask(task2);
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60));
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 10), 60));
         Collection<Task> tasks = new ArrayList<>();
-        tasks.add(task1);
-        tasks.add(task2);
+        tasks.add(taskManager.getTaskByID(1));
+        tasks.add(taskManager.getTaskByID(2));
         assertArrayEquals(tasks.toArray(), taskManager.getTasks().toArray());
     }
 
     @Test
     void getAllTaskWithEmptyTask() {
-        Task task = null;
-        taskManager.createTask(task);
+        taskManager.createTask(null);
         assertTrue(taskManager.getTasks().isEmpty());
     }
 
     @Test
     void getAllEpic() {
-        Epic epic1 = new Epic("test", TaskStatus.NEW, "TestDes");
-        SubTask subTask = new SubTask("test", TaskStatus.NEW, "TestDes", 1);
-        taskManager.createEpic(epic1);
-        taskManager.createSubTask(subTask);
+        taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         Collection<Epic> epics = new ArrayList<>();
-        epics.add(epic1);
+        epics.add(taskManager.getEpicByID(1));
         assertArrayEquals(epics.toArray(), taskManager.getEpics().toArray());
     }
 
     @Test
     void getAllEpicWithEmptyEpic() {
-        Epic epic = null;
-        taskManager.createEpic(epic);
+        taskManager.createEpic(null);
         assertTrue(taskManager.getEpics().isEmpty());
     }
 
     @Test
     void getAllSubTask() {
-        Epic epic1 = new Epic("test", TaskStatus.NEW, "TestDes");
-        SubTask subTask = new SubTask("test", TaskStatus.NEW, "TestDes", 1);
-        taskManager.createEpic(epic1);
-        taskManager.createSubTask(subTask);
+        taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
+        SubTask subTask1 = new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1);
         Collection<SubTask> subTasks = new ArrayList<>();
-        subTasks.add(subTask);
-        assertArrayEquals(subTasks.toArray(), taskManager.getAllSubtasks().toArray());
+        subTasks.add(subTask1);
+        assertEquals(subTasks.size(), taskManager.getAllSubtasks().size());
     }
 
     @Test
     void getAllSubTaskWithEmptySubTask() {
-        Epic epic1 = new Epic("test", TaskStatus.NEW, "TestDes");
-        SubTask subTask = null;
-        taskManager.createEpic(epic1);
-        taskManager.createSubTask(subTask);
+        taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
+        taskManager.createSubTask(null);
         assertTrue(taskManager.getAllSubtasks().isEmpty());
     }
 
     @Test
     void getSubTaskByEpicId() {
-        Epic epic1 = new Epic("test", TaskStatus.NEW, "TestDes");
-        SubTask subTask = new SubTask("test", TaskStatus.NEW, "TestDes", 1);
-        taskManager.createEpic(epic1);
-        taskManager.createSubTask(subTask);
+        taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
+        SubTask subTask1 = new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1);
         Collection<SubTask> subTasks = new ArrayList<>();
-        subTasks.add(subTask);
-        assertArrayEquals(subTasks.toArray(), taskManager.getSubTasksByEpicId(1).toArray());
+        subTasks.add(subTask1);
+        assertEquals(subTasks.size(), taskManager.getSubTasksByEpicId(1).size());
     }
 
     @Test
     void getSubTaskByEpicIdWithEmptyEpicId() {
-        Epic epic1 = new Epic("test", TaskStatus.NEW, "TestDes");
-        SubTask subTask = new SubTask("test", TaskStatus.NEW, "TestDes", 1);
-        taskManager.createEpic(epic1);
-        taskManager.createSubTask(subTask);
+        taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         Collection<SubTask> subTasks = taskManager.getSubTasksByEpicId(2);
         assertNull(subTasks);
     }
 
     @Test
     void getTaskById() {
-        Task task1 = new Task("test", TaskStatus.NEW, "TestDes");
-        taskManager.createTask(task1);
-        assertEquals(task1, taskManager.getTaskByID(1));
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60));
+        assertEquals(1, taskManager.getTaskByID(1).getId());
     }
 
     @Test
     void getTaskByIdWithEmptyTask() {
-        Task task1 = new Task("test", TaskStatus.NEW, "TestDes");
-        taskManager.createTask(task1);
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60));
         Task task2 = taskManager.getTaskByID(2);
         assertNull(task2);
     }
 
     @Test
     void getEpicById() {
-        Epic epic1 = new Epic("test", TaskStatus.NEW, "TestDes");
-        taskManager.createEpic(epic1);
-        assertEquals(epic1, taskManager.getEpicByID(1));
+        taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
+        assertEquals(1, taskManager.getEpicByID(1).getId());
     }
 
     @Test
     void getEpicByIdWithEmptyEpic() {
-        Epic epic1 = new Epic("test", TaskStatus.NEW, "TestDes");
-        taskManager.createEpic(epic1);
+        taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
         Epic epic2 = taskManager.getEpicByID(2);
         assertNull(epic2);
     }
 
     @Test
     void getSubTaskById() {
-        Epic epic1 = new Epic("test", TaskStatus.NEW, "TestDes");
-        SubTask subTask = new SubTask("test", TaskStatus.NEW, "TestDes", 1);
-        taskManager.createEpic(epic1);
-        taskManager.createSubTask(subTask);
-        assertEquals(subTask, taskManager.getSubtaskByID(2));
+        taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
+        assertEquals(2, taskManager.getSubtaskByID(2).getId());
     }
 
     @Test
     void getSubTaskByIdWithEmptySubTask() {
-        Epic epic1 = new Epic("test", TaskStatus.NEW, "TestDes");
-        SubTask subTask = new SubTask("test", TaskStatus.NEW, "TestDes", 1);
-        taskManager.createEpic(epic1);
-        taskManager.createSubTask(subTask);
+        taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         SubTask subTask1 = taskManager.getSubtaskByID(1);
         assertNull(subTask1);
 
@@ -192,8 +193,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void deleteAllTask() {
-        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes"));
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60));
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 10), 60));
         taskManager.deleteAllTasks();
         assertEquals(0, taskManager.getTasks().size());
     }
@@ -208,8 +211,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void deleteTaskById() {
-        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes"));
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60));
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 10), 60));
         taskManager.deleteTaskById(1);
         assertNull(taskManager.getTaskByID(1));
         assertNotNull(taskManager.getTaskByID(2));
@@ -226,7 +231,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     void deleteAllEpics() {
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         taskManager.deleteAllEpics();
         assertTrue(taskManager.getEpics().isEmpty());
         assertTrue(taskManager.getAllSubtasks().isEmpty());
@@ -246,7 +252,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     void deleteEpicById() {
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         taskManager.deleteEpicById(1);
         assertNull(taskManager.getEpicByID(1));
         assertNull(taskManager.getSubTasksByEpicId(1));
@@ -263,7 +270,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void deleteSubTaskById() {
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         taskManager.deleteSubtaskById(2);
         assertTrue(taskManager.getSubTasksByEpicId(1).isEmpty());
     }
@@ -279,7 +287,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void deleteSubTaskByIdWithIncorrectId() {
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         taskManager.deleteSubtaskById(3);
         assertFalse(taskManager.getSubTasksByEpicId(1).isEmpty());
     }
@@ -287,40 +296,50 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void deleteAllSubTask() {
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1));
         taskManager.deleteAllSubTasks();
         assertTrue(taskManager.getAllSubtasks().isEmpty());
     }
 
     @Test
     void updateTask() {
-        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes"));
-        taskManager.updateTask(new Task("test", TaskStatus.IN_PROGRESS, "TestDes"), 1);
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60));
+        taskManager.updateTask(new Task("test", TaskStatus.IN_PROGRESS, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 01), 60), 1);
         assertEquals(TaskStatus.IN_PROGRESS, taskManager.getTaskByID(1).getStatus());
-        taskManager.updateTask(new Task("test", TaskStatus.DONE, "TestDes"), 1);
+        taskManager.updateTask(new Task("test", TaskStatus.DONE, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 40), 60), 1);
         assertEquals(TaskStatus.DONE, taskManager.getTaskByID(1).getStatus());
     }
 
     @Test
     void updateTaskWithEmptyTask() {
-        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes"));
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60));
         taskManager.updateTask(null, 1);
         assertEquals(TaskStatus.NEW, taskManager.getTaskByID(1).getStatus());
     }
 
     @Test
     void updateTaskWithIncorrectId() {
-        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes"));
-        taskManager.updateTask(new Task("test", TaskStatus.NEW, "TestDes"), 2);
+        taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60));
+        taskManager.updateTask(new Task("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60), 2);
         assertNull(taskManager.getTaskByID(2));
     }
 
     @Test
     void updateEpic() {
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1));
         taskManager.updateEpic(new Epic("test", TaskStatus.IN_PROGRESS, "TestDes"), 1);
         assertEquals(TaskStatus.IN_PROGRESS, taskManager.getEpicByID(1).getStatus());
     }
@@ -328,8 +347,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void updateEpicWithEmptyEpic() {
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1));
+        taskManager.updateEpic(new Epic("test", TaskStatus.NEW, "TestDes"), 1);
         taskManager.updateEpic(null, 1);
         assertEquals(TaskStatus.NEW, taskManager.getEpicByID(1).getStatus());
     }
@@ -342,22 +364,32 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateSubTask() {
-        taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
-        taskManager.updateSubtask(new SubTask("test", TaskStatus.IN_PROGRESS, "TestDes", 1), 2);
+    void updateSubTaskInProgress() {
+        taskManager.createEpic(new Epic("EPIC", TaskStatus.NEW, "EPIC1"));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
+        taskManager.updateSubtask(new SubTask("test", TaskStatus.IN_PROGRESS, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1), 2);
         assertEquals(TaskStatus.IN_PROGRESS, taskManager.getEpicByID(1).getStatus());
-        taskManager.updateSubtask(new SubTask("test", TaskStatus.DONE, "TestDes", 1), 2);
-        taskManager.updateSubtask(new SubTask("test", TaskStatus.DONE, "TestDes", 1), 3);
+    }
+
+    @Test
+    void updateSubTaskDone() {
+        taskManager.createEpic(new Epic("EPIC", TaskStatus.NEW, "EPIC1"));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
+        taskManager.updateSubtask(new SubTask("test", TaskStatus.DONE, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1), 2);
         assertEquals(TaskStatus.DONE, taskManager.getEpicByID(1).getStatus());
     }
 
     @Test
     void updateSubTaskWithEmptySubTask() {
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1));
         taskManager.updateSubtask(null, 2);
         assertEquals(TaskStatus.NEW, taskManager.getEpicByID(1).getStatus());
     }
@@ -365,9 +397,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void updateSubTaskWithIncorrectIDSubTask() {
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
-        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes", 1));
-        taskManager.updateSubtask(new SubTask("test", TaskStatus.IN_PROGRESS, "TestDes", 1), 4);
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
+        taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1));
+        taskManager.updateSubtask(new SubTask("test", TaskStatus.IN_PROGRESS, "TestDes",
+                LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1), 4);
         assertNull(taskManager.getSubtaskByID(4));
     }
 

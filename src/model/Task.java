@@ -1,5 +1,8 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class Task {
@@ -8,6 +11,24 @@ public class Task {
     protected TaskStatus status;
     protected String description;
     protected TaskEnum taskEnum;
+    protected LocalDateTime startTime;
+    protected long duration;
+    protected LocalDateTime endTime;
+
+    public Task(String name, TaskStatus status, String description, LocalDateTime startTime, long duration) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Task(int id, String name, TaskStatus status, String description) {
+        this.name = name;
+        this.status = status;
+        this.description = description;
+    }
 
     public Task(String name, TaskStatus status, String description) {
         this.name = name;
@@ -15,11 +36,29 @@ public class Task {
         this.description = description;
     }
 
-    public Task(int id, String name, TaskStatus status, String description) {
+    public Task(int id, String name, TaskStatus status, String description, LocalDateTime startTime, long duration) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 
     public TaskEnum getTaskEnum() {
@@ -51,6 +90,24 @@ public class Task {
         this.status = status;
     }
 
+    public LocalDateTime getEndTime() {
+        return startTime.plus(Duration.ofMinutes(duration));
+    }
+
+    public static class TaskComparator implements Comparator<Task> {
+
+        @Override
+        public int compare(Task task1, Task task2) {
+            if (task1.getStartTime() != null && task2.getStartTime() != null) {
+                return task1.getStartTime().compareTo(task2.getStartTime());
+            } else if (task1.getStartTime() != null && task2.getStartTime() == null) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -66,11 +123,13 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", status=" + status +
-                ", description='" + description + '\'' +
+        return "\n" + "Task{" + "\n" +
+                " id = " + id + "\n" +
+                " Задача = '" + name + '\'' + "\n" +
+                " Статус = " + status + "\n" +
+                " Описание = '" + description + '\'' + "\n" +
+                " Начало выполнения = " + getStartTime() + "\n" +
+                " Продолжительность = " + getDuration() +
                 '}';
     }
 }
