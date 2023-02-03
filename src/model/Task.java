@@ -92,18 +92,6 @@ public class Task {
         return startTime.plus(Duration.ofMinutes(duration));
     }
 
-    public static class TaskComparator implements Comparator<Task> {
-
-        @Override
-        public int compare(Task task1, Task task2) {
-            if (task1.getStartTime() != null && task2.getStartTime() != null) {
-                return task1.getStartTime().compareTo(task2.getStartTime());
-            } else {
-                return 1;
-            }
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

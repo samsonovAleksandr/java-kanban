@@ -32,6 +32,10 @@ public class Main {
 
         System.out.println(taskManager.getPrioritizedTasks());
 
+        taskManager.deleteAllTasks();
+
+        System.out.println(taskManager.getPrioritizedTasks());
+
 
 
 

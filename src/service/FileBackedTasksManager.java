@@ -57,7 +57,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         switch (taskEnum) {
             case TASK:
                 if (str[5] != null && str[6] != null) {
-
                     return new Task(id, name, taskStatus, description, startTime, duration);
                 }
             case EPIC_TASK:

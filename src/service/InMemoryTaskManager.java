@@ -1,9 +1,6 @@
 package service;
 
-import model.Epic;
-import model.SubTask;
-import model.Task;
-import model.TaskStatus;
+import model.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -17,7 +14,16 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, SubTask> subTasks = new HashMap<>();
     protected int i = 0;
 
-    protected TreeSet<Task> prioritizedTasks = new TreeSet<>(new Task.TaskComparator());
+    protected TreeSet<Task> prioritizedTasks = new TreeSet<>(new Comparator<Task>() {
+        @Override
+        public int compare(Task task1, Task task2) {
+            if (task1.getStartTime() != null && task2.getStartTime() != null) {
+                return task1.getStartTime().compareTo(task2.getStartTime());
+            } else {
+                return 1;
+            }
+        }
+    });
 
     @Override
     public List<Task> getPrioritizedTasks() {
@@ -130,6 +136,13 @@ public class InMemoryTaskManager implements TaskManager {
         for (Integer del : tasks.keySet()) {
             historyManager.remove(del);
         }
+        Iterator<Task> iterator = prioritizedTasks.iterator();
+        while (iterator.hasNext()){
+            Task task = iterator.next();
+            if (task.getTaskEnum().equals(TaskEnum.TASK)){
+                iterator.remove();
+            }
+        }
         tasks.clear();
     }
 
@@ -144,6 +157,7 @@ public class InMemoryTaskManager implements TaskManager {
                     subTasks.remove(subtaskId);
                     updateEpicStatus(epic);
                     historyManager.remove(subtaskId);
+                    prioritizedTasks.remove(subTasks.get(subtaskId));
                 }
             }
     }
@@ -156,6 +170,13 @@ public class InMemoryTaskManager implements TaskManager {
         for (Epic epic : epics.values()) {
             epic.getSubTaskId().clear();
         }
+        Iterator<Task> iterator = prioritizedTasks.iterator();
+        while (iterator.hasNext()){
+            Task task = iterator.next();
+            if (task.getTaskEnum().equals(TaskEnum.SUB_TASK)){
+                iterator.remove();
+            }
+        }
         subTasks.clear();
     }
 
@@ -167,6 +188,13 @@ public class InMemoryTaskManager implements TaskManager {
         for (Integer del : subTasks.keySet()) {
             historyManager.remove(del);
         }
+        Iterator<Task> iterator = prioritizedTasks.iterator();
+        while (iterator.hasNext()){
+            Task task = iterator.next();
+            if (task.getTaskEnum().equals(TaskEnum.EPIC_TASK)){
+                iterator.remove();
+            }
+        }
         epics.clear();
         subTasks.clear();
     }
@@ -175,6 +203,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTaskById(int taskId) {
         tasks.remove(taskId);
         historyManager.remove(taskId);
+        prioritizedTasks.remove(taskId);
     }
 
     @Override
@@ -187,6 +216,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         epics.remove(epicId);
         historyManager.remove(epicId);
+        prioritizedTasks.remove(epicId);
     }
 
     @Override
