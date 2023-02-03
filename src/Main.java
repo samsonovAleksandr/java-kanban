@@ -24,17 +24,12 @@ public class Main {
         taskManager.createSubTask(new SubTask("SUBTASK3.3", TaskStatus.NEW, "SUBTASK_DESCRI3.1",
                 LocalDateTime.of(2023, 2, 5,15, 0), 60, 3));
         taskManager.getTaskByID(1);
-        taskManager.getEpicByID(2);
-        taskManager.getSubTasksByEpicId(2);
-        taskManager.getTaskByID(1);
-        taskManager.getEpicByID(2);
-        taskManager.getSubtaskByID(3);
+        taskManager.getTaskByID(2);
+        taskManager.getEpicByID(3);
 
-        System.out.println(taskManager.getPrioritizedTasks());
 
-        taskManager.deleteAllTasks();
+        System.out.println(taskManager.getHistory());
 
-        System.out.println(taskManager.getPrioritizedTasks());
 
 
 

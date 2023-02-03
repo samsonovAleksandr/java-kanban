@@ -139,21 +139,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     private String toString(Task task) {
-        String[] str = new String[8];
-        str[0] = Integer.toString(task.getId());
-        str[1] = task.getTaskEnum().toString();
-        str[2] = task.getName();
-        str[3] = task.getStatus().toString();
-        str[4] = task.getDescription();
-        str[5] = String.valueOf(task.getStartTime());
-        str[6] = String.valueOf(task.getDuration());
-        if (str[1].equals("SUB_TASK")) {
-            SubTask subTask = (SubTask) task;
-            str[7] = Integer.toString(subTask.getEpicId());
-        } else {
-            str[7] = "";
+        if (task.getTaskEnum().equals(TaskEnum.SUB_TASK)){
+            return String.format("%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTaskEnum(), task.getName(),
+                    task.getStatus(), task.getDescription(), task.getStartTime(), task.getDuration(),
+                    ((SubTask) task).getEpicId());
         }
-        return String.join(",", str);
+        return String.format("%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTaskEnum(), task.getName(), task.getStatus(),
+                task.getDescription(), task.getStartTime(), task.getDuration());
     }
 
     private static String historyToString(HistoryManager manager) {
