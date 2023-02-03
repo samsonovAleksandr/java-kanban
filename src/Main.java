@@ -14,15 +14,23 @@ public class Main {
        FileBackedTasksManager taskManager = new FileBackedTasksManager(new File("src/resources/history.csv"));
         taskManager.createTask(new Task("tset1", TaskStatus.NEW, "test1",
                 LocalDateTime.of(2023, 1,9,10,0), 60));
+     taskManager.createTask(new Task("tset1", TaskStatus.NEW, "test1",
+             LocalDateTime.of(2022, 1,9,10,0), 60));
         taskManager.createEpic(new Epic("EPIC", TaskStatus.NEW, "EPIC_DESCRIPTION"));
         taskManager.createSubTask(new SubTask("SUBTASK3.1", TaskStatus.NEW, "SUBTASK_DESCRI3.1",
-                LocalDateTime.of(2023, 2, 5,20, 0), 60, 2));
+                LocalDateTime.of(2023, 2, 5,10, 0), 60, 3));
+        taskManager.createSubTask(new SubTask("SUBTASK3.2", TaskStatus.NEW, "SUBTASK_DESCRI3.1",
+                LocalDateTime.of(2023, 2, 5,12, 0), 60, 3));
+        taskManager.createSubTask(new SubTask("SUBTASK3.3", TaskStatus.NEW, "SUBTASK_DESCRI3.1",
+                LocalDateTime.of(2023, 2, 5,15, 0), 60, 3));
         taskManager.getTaskByID(1);
         taskManager.getEpicByID(2);
         taskManager.getSubTasksByEpicId(2);
         taskManager.getTaskByID(1);
         taskManager.getEpicByID(2);
         taskManager.getSubtaskByID(3);
+
+        System.out.println(taskManager.getPrioritizedTasks());
 
 
 

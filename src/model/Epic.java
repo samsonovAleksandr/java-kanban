@@ -9,8 +9,6 @@ import java.util.Objects;
 public class Epic extends Task {
     private final List<SubTask> subTaskId = new ArrayList<>();
     private LocalDateTime endTime;
-    private LocalDateTime startTime;
-    private long duration;
 
     public Epic(String name, TaskStatus status, String description) {
         super(name, status, description);
@@ -50,19 +48,31 @@ public class Epic extends Task {
     public LocalDateTime getEndTime() {
 
         if (subTaskId != null && subTaskId.size() != 0) {
-            return subTaskId.get(subTaskId.size() - 1).getEndTime();
+
+            LocalDateTime end = subTaskId.get(0).getEndTime();
+
+            for (SubTask sub : subTaskId){
+                LocalDateTime subEndTime = sub.getEndTime();
+                if (end.isBefore(subEndTime) ){
+                    end = subEndTime;
+                }
+            }
+            return end;
         } else {
             return null;
         }
     }
 
     public LocalDateTime getStartTime() {
-        LocalDateTime start = null;
+
         if (subTaskId != null && subTaskId.size() != 0) {
-            for (SubTask task : subTaskId) {
-                if (task.getStartTime() != null) {
-                    start = task.getStartTime();
-                    break;
+
+            LocalDateTime start = subTaskId.get(0).getStartTime();
+
+            for (SubTask sub : subTaskId){
+                LocalDateTime subStartTime = sub.getStartTime();
+                if (start.isAfter(subStartTime) ){
+                    start = subStartTime;
                 }
             }
             return start;

@@ -5,6 +5,7 @@ import model.SubTask;
 import model.Task;
 import model.TaskStatus;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static model.TaskStatus.*;
@@ -18,6 +19,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     protected TreeSet<Task> prioritizedTasks = new TreeSet<>(new Task.TaskComparator());
 
+    @Override
     public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(prioritizedTasks);
     }
@@ -35,8 +37,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void createTask(Task task) {
         if (task != null){
             task.setId(newId());
-            tasks.put(task.getId(), task);
             validatorTimeTasks(task);
+            tasks.put(task.getId(), task);
             prioritizedTasks.add(task);
 
         }
@@ -56,17 +58,16 @@ public class InMemoryTaskManager implements TaskManager {
     public void createSubTask(SubTask subTask) {
         if (subTask!=null){
             subTask.setId(newId());
+            validatorTimeTasks(subTask);
             subTasks.put(subTask.getId(), subTask);
-            if (subTask.getStartTime()!=null){
-                validatorTimeTasks(subTask);
-            }
             prioritizedTasks.add(subTask);
-            int epicIdOfSubTask = subTask.getEpicId();
 
+
+            int epicIdOfSubTask = subTask.getEpicId();
             Epic epic = epics.get(epicIdOfSubTask);
             if (epic != null) {
                 epic.addSubTaskId(subTask);
-              updateEpicStatus(epic);
+                updateEpicStatus(epic);
             }
         }
     }
@@ -193,6 +194,7 @@ public class InMemoryTaskManager implements TaskManager {
         if(task!=null){
             if (tasks.containsKey(i)) {
                 task.setId(i);
+                validatorTimeTasks(task);
                 tasks.put(i, task);
             }
         }
@@ -215,6 +217,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subTask != null){
             if (subTasks.containsKey(i)) {
                 subTask.setId(i);
+                validatorTimeTasks(subTask);
                 subTasks.put(i, subTask);
                 updateEpicStatus(epics.get(subTask.getEpicId()));
             }
@@ -253,10 +256,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
    private void validatorTimeTasks(Task task) {
-        for (Task task1 : prioritizedTasks) {
-            if (task.getStartTime() != null && task1.getStartTime() != null) {
-                if (task1.getStartTime().equals(task.getStartTime())) {
-                    throw new IllegalArgumentException("Одинаковое время у : " + task1.getId() + " и " + task.getId());
+        if (task != null){
+            for (Task task1 : prioritizedTasks) {
+                if (task1.getStartTime() != null) {
+                    LocalDateTime t = task.getEndTime().minusMinutes(task.getStartTime().getMinute());
+                    LocalDateTime t1 = task1.getEndTime().minusMinutes(task1.getStartTime().getMinute());
+                    if (t.isEqual(t1)) {
+                        throw new IllegalArgumentException("Одинаковое время у : " + task1.getId() + " и " + task.getId());
+                    }
                 }
             }
         }

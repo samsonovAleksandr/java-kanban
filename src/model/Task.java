@@ -10,10 +10,8 @@ public class Task {
     protected String name;
     protected TaskStatus status;
     protected String description;
-    protected TaskEnum taskEnum;
     protected LocalDateTime startTime;
     protected long duration;
-    protected LocalDateTime endTime;
 
     public Task(String name, TaskStatus status, String description, LocalDateTime startTime, long duration) {
         this.id = id;
@@ -100,8 +98,6 @@ public class Task {
         public int compare(Task task1, Task task2) {
             if (task1.getStartTime() != null && task2.getStartTime() != null) {
                 return task1.getStartTime().compareTo(task2.getStartTime());
-            } else if (task1.getStartTime() != null && task2.getStartTime() == null) {
-                return -1;
             } else {
                 return 1;
             }

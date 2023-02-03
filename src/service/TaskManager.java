@@ -10,6 +10,8 @@ import java.util.List;
 public interface TaskManager {
     List<Task> getHistory();
 
+    List<Task> getPrioritizedTasks();
+
     void createTask(Task task);
 
     void createEpic(Epic epic);
