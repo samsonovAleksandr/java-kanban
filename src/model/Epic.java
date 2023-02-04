@@ -50,11 +50,12 @@ public class Epic extends Task {
         if (subTaskId != null && subTaskId.size() != 0) {
 
             LocalDateTime end = subTaskId.get(0).getEndTime();
-
-            for (SubTask sub : subTaskId){
-                LocalDateTime subEndTime = sub.getEndTime();
-                if (end.isBefore(subEndTime) ){
-                    end = subEndTime;
+            if (end != null){
+                for (SubTask sub : subTaskId){
+                    LocalDateTime subEndTime = sub.getEndTime();
+                    if (end.isBefore(subEndTime) ){
+                        end = subEndTime;
+                    }
                 }
             }
             return end;
@@ -68,11 +69,12 @@ public class Epic extends Task {
         if (subTaskId != null && subTaskId.size() != 0) {
 
             LocalDateTime start = subTaskId.get(0).getStartTime();
-
-            for (SubTask sub : subTaskId){
-                LocalDateTime subStartTime = sub.getStartTime();
-                if (start.isAfter(subStartTime) ){
-                    start = subStartTime;
+            if (start != null){
+                for (SubTask sub : subTaskId){
+                    LocalDateTime subStartTime = sub.getStartTime();
+                    if (start.isAfter(subStartTime) ){
+                        start = subStartTime;
+                    }
                 }
             }
             return start;

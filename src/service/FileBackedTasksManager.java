@@ -52,27 +52,23 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String name = str[2];
         TaskStatus taskStatus = TaskStatus.valueOf(str[3]);
         String description = str[4];
-        LocalDateTime startTime = LocalDateTime.parse(str[5], formatter);
-        long duration = Long.parseLong(str[6]);
-        switch (taskEnum) {
-            case TASK:
-                if (str[5] != null && str[6] != null) {
-                    return new Task(id, name, taskStatus, description, startTime, duration);
-                }
-            case EPIC_TASK:
-                if (str[5].isEmpty() && (str[6] != null)) {
-                    return new Epic(id, name, taskStatus, description, startTime, duration);
-                } else {
-                    return new Epic(id, name, taskStatus, description);
-                }
-            case SUB_TASK:
-                if (str[5] != null && str[6] != null) {
-                    int epicId = Integer.parseInt(str[7]);
-                    return new SubTask(id, name, taskStatus, description, startTime, duration, epicId);
-                }
-            default:
-                throw new RuntimeException("Ошибка.");
+        LocalDateTime startTime = null;
+        long duration = 0;
+        if (str[5] != null && str[6] != null) {
+             startTime = LocalDateTime.parse(str[5], formatter);
+             duration = Long.parseLong(str[6]);
         }
+            switch (taskEnum) {
+                case TASK:
+                    return new Task(id, name, taskStatus, description, startTime, duration);
+                case EPIC_TASK:
+                        return new Epic(id, name, taskStatus, description, startTime, duration);
+                case SUB_TASK:
+                        int epicId = Integer.parseInt(str[7]);
+                        return new SubTask(id, name, taskStatus, description, startTime, duration, epicId);
+                default:
+                    throw new RuntimeException("Ошибка.");
+            }
     }
 
     static List<Integer> historyFromString(String value) {
@@ -139,13 +135,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     private String toString(Task task) {
+        String idEpic;
         if (task.getTaskEnum().equals(TaskEnum.SUB_TASK)){
-            return String.format("%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTaskEnum(), task.getName(),
-                    task.getStatus(), task.getDescription(), task.getStartTime(), task.getDuration(),
-                    ((SubTask) task).getEpicId());
+            idEpic = String.valueOf(((SubTask) task).getEpicId());
+        } else {
+            idEpic = "";
         }
-        return String.format("%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTaskEnum(), task.getName(), task.getStatus(),
-                task.getDescription(), task.getStartTime(), task.getDuration());
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTaskEnum(), task.getName(),
+                    task.getStatus(), task.getDescription(), task.getStartTime(), task.getDuration(), idEpic);
     }
 
     private static String historyToString(HistoryManager manager) {

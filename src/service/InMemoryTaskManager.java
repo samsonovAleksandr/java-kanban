@@ -2,6 +2,8 @@ package service;
 
 import model.*;
 
+import java.sql.Time;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -286,13 +288,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
    private void validatorTimeTasks(Task task) {
-        if (task != null){
+        if (task.getStartTime() != null){
             for (Task task1 : prioritizedTasks) {
                 if (task1.getStartTime() != null) {
-                    LocalDateTime t = task.getEndTime().minusMinutes(task.getStartTime().getMinute());
-                    LocalDateTime t1 = task1.getEndTime().minusMinutes(task1.getStartTime().getMinute());
-                    if (t.isEqual(t1)) {
-                        throw new IllegalArgumentException("Одинаковое время у : " + task1.getId() + " и " + task.getId());
+                    if (task.getStartTime().isBefore(task1.getEndTime())  && task.getEndTime().isAfter(task1.getStartTime())) {
+                        throw new IllegalArgumentException("Время выполнения совпадает у : " + task1.getId() + " и " + task.getId());
                     }
                 }
             }
