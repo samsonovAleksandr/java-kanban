@@ -2,16 +2,36 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 import model.TaskStatus;
+import server.HttpTaskServer;
+import server.KVServer;
 import service.FileBackedTasksManager;
+import service.Managers;
+import service.TaskManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static service.FileBackedTasksManager.loadFromFile;
 
 public class Main {
-    public static void main(String[] args) {
-       FileBackedTasksManager taskManager = new FileBackedTasksManager(new File("src/resources/history.csv"));
+    public static void main(String[] args) throws IOException {
+
+
+
+        KVServer kvServer = Managers.getDefaultKVServer();
+        kvServer.start();
+        HttpTaskServer taskServer = new HttpTaskServer();
+        taskServer.start();
+
+        TaskManager taskManager = Managers.getDefault();
+
+
+
+
+
+
+      /*  FileBackedTasksManager taskManager = new FileBackedTasksManager(new File("src/resources/history.csv"));
         taskManager.createTask(new Task("tset1", TaskStatus.NEW, "test1",
                 LocalDateTime.of(2023, 1,9,10,0), 60));
      taskManager.createTask(new Task("tset1", TaskStatus.NEW, "test1",
@@ -31,7 +51,7 @@ public class Main {
 
 
 
-       /*  FileBackedTasksManager taskManager = loadFromFile(new File("src/resources/history.csv"));
+        FileBackedTasksManager taskManager = loadFromFile(new File("src/resources/history.csv"));
 
 
         System.out.println(taskManager.getPrioritizedTasks());

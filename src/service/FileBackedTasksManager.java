@@ -17,9 +17,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.file = file;
     }
 
+    public FileBackedTasksManager(){
+        this.file = null;
+    }
+
     private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    private void save() {
+    public void save() {
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
             bufferedWriter.write("id,type,name,status,description,startTime,duration,epicId");
             bufferedWriter.newLine();
@@ -90,7 +94,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return fileBackedTasksManager;
     }
 
-    private void load() {
+    public void load() {
         try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             br.readLine();
             while (true) {
