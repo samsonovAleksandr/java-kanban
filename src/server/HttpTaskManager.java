@@ -1,76 +1,86 @@
 package server;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import model.Epic;
 import model.SubTask;
 import model.Task;
 import model.TaskEnum;
 import service.FileBackedTasksManager;
-import service.Managers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
 public class HttpTaskManager extends FileBackedTasksManager {
 
     private KVTaskClient kvTaskClient;
-    Gson gson = Managers.getGson();
-    String url;
+    private static Gson gson;
+    private String url;
+
+    private static final String task = "task";
+    private static final String epic = "epic";
+    private static final String subtask = "subtask";
+    private static final String history = "history";
+
+    TypeToken<List<Task>> typeTokenTask;
+    TypeToken<List<Epic>> typeTokenEpic;
+    TypeToken<List<SubTask>> typeTokenSubTask;
+
+
 
     public HttpTaskManager(String url) {
+        this.gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
         this.url = url;
-        kvTaskClient = new KVTaskClient(url);
+        this.kvTaskClient = new KVTaskClient(url);
     }
 
     @Override
     public void save() {
-        kvTaskClient.put("task", gson.toJson(this.tasks));
-        kvTaskClient.put("epic", gson.toJson(this.epics));
-        kvTaskClient.put("subtask", gson.toJson(this.subTasks));
-        kvTaskClient.put("history", gson.toJson(this.historyManager.getHistory()));
+        kvTaskClient.put(task, gson.toJson(this.tasks));
+        kvTaskClient.put(epic, gson.toJson(this.epics));
+        kvTaskClient.put(subtask, gson.toJson(this.subTasks));
+        kvTaskClient.put(history, gson.toJson(this.historyManager.getHistory()));
     }
 
     @Override
     public void load() {
-        try {
-            List<Task> tasks = gson.fromJson(kvTaskClient.load("task"),
-                    new TypeToken<List<Task>>() {
-                    }.getType());
+        if (!tasks.isEmpty()) {
+            List<Task> tasks = gson.fromJson(kvTaskClient.load(task), typeTokenTask.getType());
+
             for (Task task : tasks) {
                 createTask(task);
             }
-        } catch (NullPointerException e) {
+        } else {
             System.out.println("Список сохраненных задач пуст");
         }
 
-        try {
-            List<Epic> epics = gson.fromJson(kvTaskClient.load("epic"),
-                    new TypeToken<List<Epic>>() {
-                    }.getType());
+        if (!epics.isEmpty()) {
+            List<Epic> epics = gson.fromJson(kvTaskClient.load(epic), typeTokenEpic.getType());
 
             for (Epic epic : epics) {
                 createEpic(epic);
             }
-        } catch (NullPointerException e) {
+        } else {
             System.out.println("Список сохраненных эпиков пуст");
         }
 
-        try {
-            List<SubTask> subtasks = gson.fromJson(kvTaskClient.load("subtask"),
-                    new TypeToken<List<SubTask>>() {
-                    }.getType());
+        if (!subTasks.isEmpty()) {
+            List<SubTask> subtasks = gson.fromJson(kvTaskClient.load(subtask), typeTokenSubTask.getType());
             for (SubTask subtask : subtasks) {
                 createSubTask(subtask);
             }
-        } catch (NullPointerException e) {
+        } else {
             System.out.println("Список сохраненных подзадач пуст");
         }
-        try {
-            List<Task> history = gson.fromJson(kvTaskClient.load("history"),
-                    new TypeToken<List<Task>>() {
-                    }.getType());
-            for (Task task : history) {
+
+
+        if (!getHistory().isEmpty()) {
+            List<Task> hist = gson.fromJson(kvTaskClient.load(history), typeTokenTask.getType());
+            for (Task task : hist) {
                 if (task.getTaskEnum() == TaskEnum.TASK) {
                     getTaskByID(task.getId());
                 } else if (task.getTaskEnum() == TaskEnum.EPIC_TASK) {
@@ -79,8 +89,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
                     getSubtaskByID(task.getId());
                 }
             }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        } else {
             System.out.println("Список сохраненной истории пуст");
         }
     }

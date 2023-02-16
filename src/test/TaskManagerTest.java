@@ -76,7 +76,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60));
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 10), 60));
+                LocalDateTime.of(2022, 01, 31, 18, 10), 60));
         Collection<Task> tasks = new ArrayList<>();
         tasks.add(taskManager.getTaskByID(1));
         tasks.add(taskManager.getTaskByID(2));
@@ -196,7 +196,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60));
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 10), 60));
+                LocalDateTime.of(2022, 01, 31, 18, 10), 60));
         taskManager.deleteAllTasks();
         assertEquals(0, taskManager.getTasks().size());
     }
@@ -214,7 +214,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60));
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 10), 60));
+                LocalDateTime.of(2022, 01, 31, 18, 10), 60));
         taskManager.deleteTaskById(1);
         assertNull(taskManager.getTaskByID(1));
         assertNotNull(taskManager.getTaskByID(2));
@@ -299,7 +299,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1));
+                LocalDateTime.of(2022, 01, 31, 18, 10), 60, 1));
         taskManager.deleteAllSubTasks();
         assertTrue(taskManager.getAllSubtasks().isEmpty());
     }
@@ -309,10 +309,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60));
         taskManager.updateTask(new Task("test", TaskStatus.IN_PROGRESS, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 01), 60), 1);
+                LocalDateTime.of(2022, 12, 4, 18, 01), 60), 1);
         assertEquals(TaskStatus.IN_PROGRESS, taskManager.getTaskByID(1).getStatus());
         taskManager.updateTask(new Task("test", TaskStatus.DONE, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 40), 60), 1);
+                LocalDateTime.of(2024, 01, 31, 18, 40), 60), 1);
         assertEquals(TaskStatus.DONE, taskManager.getTaskByID(1).getStatus());
     }
 
@@ -339,7 +339,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1));
+                LocalDateTime.of(2022, 01, 31, 18, 10), 60, 1));
         taskManager.updateEpic(new Epic("test", TaskStatus.IN_PROGRESS, "TestDes"), 1);
         assertEquals(TaskStatus.IN_PROGRESS, taskManager.getEpicByID(1).getStatus());
     }
@@ -350,7 +350,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1));
+                LocalDateTime.of(2022, 01, 31, 18, 10), 60, 1));
         taskManager.updateEpic(new Epic("test", TaskStatus.NEW, "TestDes"), 1);
         taskManager.updateEpic(null, 1);
         assertEquals(TaskStatus.NEW, taskManager.getEpicByID(1).getStatus());
@@ -369,7 +369,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         taskManager.updateSubtask(new SubTask("test", TaskStatus.IN_PROGRESS, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1), 2);
+                LocalDateTime.of(2022, 01, 31, 18, 00), 60, 1), 2);
         assertEquals(TaskStatus.IN_PROGRESS, taskManager.getEpicByID(1).getStatus());
     }
 
@@ -379,7 +379,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         taskManager.updateSubtask(new SubTask("test", TaskStatus.DONE, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1), 2);
+                LocalDateTime.of(2022, 01, 31, 18, 00), 60, 1), 2);
         assertEquals(TaskStatus.DONE, taskManager.getEpicByID(1).getStatus());
     }
 
@@ -389,7 +389,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1));
+                LocalDateTime.of(2022, 01, 31, 18, 10), 60, 1));
         taskManager.updateSubtask(null, 2);
         assertEquals(TaskStatus.NEW, taskManager.getEpicByID(1).getStatus());
     }
@@ -400,7 +400,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1));
+                LocalDateTime.of(2022, 01, 31, 18, 10), 60, 1));
         taskManager.updateSubtask(new SubTask("test", TaskStatus.IN_PROGRESS, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 10), 60, 1), 4);
         assertNull(taskManager.getSubtaskByID(4));

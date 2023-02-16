@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -16,23 +17,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
 public class HttpTaskServer {
 
     private static TaskManager manager;
-    private static final Gson gson = Managers.getGson();
+    private static Gson gson;
     private final HttpServer httpServer;
     private static final int PORT = 8080;
 
-    public static void main(String[] args) throws IOException {
-        HttpTaskServer taskServer = new HttpTaskServer();
-        taskServer.start();
-    }
 
     public HttpTaskServer() throws IOException {
-        manager = Managers.getDefault();
-
-        httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
+        manager = Managers.getFileBTM();
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
+        httpServer = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         httpServer.createContext("/tasks", new TasksHandler());
         httpServer.createContext("/tasks/task", new TaskHandler());
         httpServer.createContext("/tasks/subtask", new SubtaskHandler());
@@ -55,7 +55,7 @@ public class HttpTaskServer {
             switch (requestMethod) {
                 case "GET":
                     if (path.endsWith("task") && (pathLength == 3)) {
-                        httpExchange.sendResponseHeaders(200, 0);
+                        httpExchange.sendResponseHeaders(200,0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
                             outputStream.write(("Список всех Task").getBytes(StandardCharsets.UTF_8));
                             outputStream.write(gson.toJson(manager.getTasks()).getBytes(StandardCharsets.UTF_8));
@@ -86,7 +86,7 @@ public class HttpTaskServer {
                         if (path.endsWith("task") && (pathLength == 3)) {
                             Task task = gson.fromJson(body, Task.class);
                             int id = Integer.parseInt(pathRequest.split("=")[1]);
-                            httpExchange.sendResponseHeaders(201, 0);
+                            httpExchange.sendResponseHeaders(201,0);
                             OutputStream outputStream = httpExchange.getResponseBody();
                             if (id != 0) {
                                 manager.updateTask(task, id);

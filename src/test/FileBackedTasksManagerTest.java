@@ -45,10 +45,10 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60));
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 10), 60));
+                LocalDateTime.of(2022, 01, 31, 18, 10), 60));
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 20), 60, 3));
+                LocalDateTime.of(2024, 01, 31, 18, 20), 60, 3));
         taskManager.getTaskByID(1);
         taskManager.getEpicByID(3);
         TaskManager taskManager1 = loadFromFile(new File("src/resources/history.csv"));
@@ -64,10 +64,10 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60));
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 10), 60));
+                LocalDateTime.of(2022, 01, 31, 18, 10), 60));
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 20), 60, 3));
+                LocalDateTime.of(2024, 01, 31, 18, 20), 60, 3));
         taskManager.getTaskByID(1);
         taskManager.getEpicByID(3);
         assertThrows(RuntimeException.class, () -> {
@@ -93,10 +93,10 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60));
         taskManager.createTask(new Task("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 10), 60));
+                LocalDateTime.of(2022, 01, 31, 18, 10), 60));
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 20), 60, 3));
+                LocalDateTime.of(2024, 01, 31, 18, 20), 60, 3));
         TaskManager taskManager1 = loadFromFile(new File("src/resources/history.csv"));
         assertEquals(0, taskManager1.getHistory().size());
     }

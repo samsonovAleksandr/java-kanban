@@ -18,112 +18,13 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-
-        KVServer kvServer = Managers.getDefaultKVServer();
-        kvServer.start();
         HttpTaskServer taskServer = new HttpTaskServer();
         taskServer.start();
 
-        TaskManager taskManager = Managers.getDefault();
-
-
-
-
-
-
-      /*  FileBackedTasksManager taskManager = new FileBackedTasksManager(new File("src/resources/history.csv"));
-        taskManager.createTask(new Task("tset1", TaskStatus.NEW, "test1",
-                LocalDateTime.of(2023, 1,9,10,0), 60));
-     taskManager.createTask(new Task("tset1", TaskStatus.NEW, "test1",
-             LocalDateTime.of(2022, 1,9,10,0), 60));
-        taskManager.createEpic(new Epic("EPIC", TaskStatus.NEW, "EPIC_DESCRIPTION"));
-        taskManager.createSubTask(new SubTask("SUBTASK3.1", TaskStatus.NEW, "SUBTASK_DESCRI3.1",
-                null, 0, 3));
-
-
-
-
-
-
-
-
-
-
-
-
-        FileBackedTasksManager taskManager = loadFromFile(new File("src/resources/history.csv"));
-
-
-        System.out.println(taskManager.getPrioritizedTasks());
-
-        System.out.println(taskManager.getHistory());*/
+       // KVServer kvServer = new KVServer();
+       // kvServer.start();
 
     }
 }
-      /*  TaskManager taskManager = new InMemoryTaskManager();
-        taskManager.createTask(new Task("Погулять с собакой", TaskStatus.NEW, "Выйти в 6 вечера"));
-        taskManager.createTask(new Task("Купить инструмент", TaskStatus.NEW, "Гаечные ключи"));
-        taskManager.createEpic(new Epic("Генеральная уборка", TaskStatus.NEW, "Убрать квартиру"));
-        taskManager.createSubTask(new SubTask("Помыть ванную", TaskStatus.NEW, "Помыть полки",
-                3));
-        taskManager.createSubTask(new SubTask("Убрать кухню",
-                TaskStatus.NEW, "Разложить тарелки из посудомойки", 3));
-        taskManager.createSubTask(new SubTask("Убрать Комнату",
-                TaskStatus.NEW, "Пропылесосить", 3));
-        taskManager.createEpic(new Epic("Подготовка к походу", TaskStatus.NEW, "Собрать вещи"));
-
-
-        taskManager.getTaskByID(1);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getTaskByID(2);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getEpicByID(3);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getEpicByID(7);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getTaskByID(1);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getTaskByID(2);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getEpicByID(3);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getEpicByID(7);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getTaskByID(1);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getTaskByID(2);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getEpicByID(3);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getEpicByID(7);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.getTaskByID(1);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.deleteEpicById(3);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.deleteEpicById(7);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.deleteTaskById(1);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-        taskManager.deleteTaskById(2);
-        System.out.println(taskManager.getHistory());
-        System.out.println("**************************");
-    }*/
 
 

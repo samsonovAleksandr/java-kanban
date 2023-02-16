@@ -23,7 +23,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    public void save() {
+    protected void save() {
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
             bufferedWriter.write("id,type,name,status,description,startTime,duration,epicId");
             bufferedWriter.newLine();
@@ -58,9 +58,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String description = str[4];
         LocalDateTime startTime = null;
         long duration = 0;
-        if (str[5] != null && str[6] != null) {
-             startTime = LocalDateTime.parse(str[5], formatter);
-             duration = Long.parseLong(str[6]);
+        if (str.length > 7) {
+            if (str[5] != null && !str[5].isEmpty() && str[6] != null) {
+                startTime = LocalDateTime.parse(str[5], formatter);
+                duration = Long.parseLong(str[6]);
+            }
         }
             switch (taskEnum) {
                 case TASK:
@@ -94,7 +96,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return fileBackedTasksManager;
     }
 
-    public void load() {
+    protected void load() {
         try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             br.readLine();
             while (true) {

@@ -1,6 +1,7 @@
 package test;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import model.Epic;
 import model.SubTask;
 import model.Task;
@@ -8,8 +9,10 @@ import model.TaskStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import server.HttpTaskManager;
 import server.HttpTaskServer;
 import server.KVServer;
+import server.LocalDateTimeAdapter;
 import service.Managers;
 
 import java.io.IOException;
@@ -21,11 +24,11 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HttpTaskManagerTest {
+public class HttpTaskManagerTest  {
 
     HttpTaskServer server;
 
-    Gson gson = Managers.getGson();
+    Gson gson;
 
     KVServer kvServer;
 
@@ -33,6 +36,9 @@ public class HttpTaskManagerTest {
 
     @BeforeEach
     void beforeEach() throws IOException {
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
         kvServer = new KVServer();
         kvServer.start();
 
