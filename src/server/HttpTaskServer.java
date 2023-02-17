@@ -66,10 +66,8 @@ public class HttpTaskServer {
                             httpExchange.sendResponseHeaders(404, 0);
                         }
                     } else if (pathRequest.startsWith("id=") && (pathLength == 3)) {
-                        // int id = Integer.parseInt(pathRequest.split("=")[1]);
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
-                            outputStream.write(("Получили Task c id" + id).getBytes(StandardCharsets.UTF_8));
                             outputStream.write(gson.toJson(manager.getTaskByID(id)).getBytes(StandardCharsets.UTF_8));
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -91,15 +89,14 @@ public class HttpTaskServer {
                         JsonObject jsonObject = jsonElement.getAsJsonObject();
                         Task task = gson.fromJson(jsonObject, Task.class);
                         if (path.endsWith("task") && (pathLength == 3)) {
-                            httpExchange.sendResponseHeaders(201, 0);
-                            OutputStream outputStream = httpExchange.getResponseBody();
                             if (id != 0) {
                                 manager.updateTask(task, id);
-                                outputStream.write(("Обновили Task c id " + id).getBytes(StandardCharsets.UTF_8));
+                                httpExchange.sendResponseHeaders(201, 0);
                             } else {
                                 manager.createTask(task);
-                                outputStream.write(("Создана новая Task").getBytes(StandardCharsets.UTF_8));
+                                httpExchange.sendResponseHeaders(201, 0);
                             }
+                            OutputStream outputStream = httpExchange.getResponseBody();
                             outputStream.write((gson.toJson(task).getBytes()));
                             outputStream.close();
                         }
@@ -113,17 +110,14 @@ public class HttpTaskServer {
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
                             manager.deleteAllTasks();
-                            outputStream.write(("Все Task удалены").getBytes(StandardCharsets.UTF_8));
                         } catch (IOException e) {
                             e.printStackTrace();
                             httpExchange.sendResponseHeaders(404, 0);
                         }
                     } else if (pathRequest.startsWith("id=") && (pathLength == 3)) {
-                      //  int id = Integer.parseInt(pathRequest.split("=")[1]);
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
                             manager.deleteTaskById(id);
-                            outputStream.write(("Удалена Task c id" + id).getBytes(StandardCharsets.UTF_8));
                         } catch (IOException e) {
                             e.printStackTrace();
                             httpExchange.sendResponseHeaders(404, 0);
@@ -163,13 +157,11 @@ public class HttpTaskServer {
                     if (path.endsWith("epic") && (pathLength == 3)) {
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
-                            outputStream.write(("Список всех Epic").getBytes(StandardCharsets.UTF_8));
                             outputStream.write(gson.toJson(manager.getEpics()).getBytes(StandardCharsets.UTF_8));
                         }
                     } else if (pathRequest.startsWith("id=") && (pathLength == 3)) {
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
-                            outputStream.write(("Epic с id " + id).getBytes(StandardCharsets.UTF_8));
                             outputStream.write(gson.toJson(manager.getEpicByID(id)).getBytes(StandardCharsets.UTF_8));
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -186,36 +178,33 @@ public class HttpTaskServer {
                         String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                         if (path.endsWith("epic") && (pathLength == 3)) {
                             Epic epic = gson.fromJson(body, Epic.class);
-                            httpExchange.sendResponseHeaders(201, 0);
-                            OutputStream outputStream = httpExchange.getResponseBody();
                             if (id != 0) {
                                 manager.updateEpic(epic, id);
-                                outputStream.write(("Обновили Epic c id " + id).getBytes(StandardCharsets.UTF_8));
-                                outputStream.write((gson.toJson(epic).getBytes()));
+                                httpExchange.sendResponseHeaders(201, 0);
                             } else {
                                 manager.createEpic(epic);
-                                outputStream.write(("Создали Epic").getBytes(StandardCharsets.UTF_8));
-                                outputStream.write((gson.toJson(epic)).getBytes());
+                                httpExchange.sendResponseHeaders(201, 0);
                             }
+                            OutputStream outputStream = httpExchange.getResponseBody();
+                            outputStream.write((gson.toJson(epic)).getBytes());
                             outputStream.close();
                         }
                     }
                     break;
                 case "DELETE":
                     if (path.endsWith("epic") && (pathLength == 3)) {
-                        httpExchange.sendResponseHeaders(200, 0);
+
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
                             manager.deleteAllEpics();
-                            outputStream.write(("Все Epic удалены").getBytes(StandardCharsets.UTF_8));
+                            httpExchange.sendResponseHeaders(200, 0);
                         } catch (IOException e) {
                             e.printStackTrace();
                             httpExchange.sendResponseHeaders(404, 0);
                         }
                     } else if (pathRequest.startsWith("id=") && (pathLength == 3)) {
-                        httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
                             manager.deleteEpicById(id);
-                            outputStream.write(("Epic с id = " + id + " удален").getBytes(StandardCharsets.UTF_8));
+                            httpExchange.sendResponseHeaders(200, 0);
                         } catch (IOException e) {
                             e.printStackTrace();
                             httpExchange.sendResponseHeaders(404, 0);
@@ -255,17 +244,15 @@ public class HttpTaskServer {
                         String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                         if (path.endsWith("subtask") && (pathLength == 3)) {
                             SubTask subtask = gson.fromJson(body, SubTask.class);
-                            httpExchange.sendResponseHeaders(201, 0);
-                            OutputStream outputStream = httpExchange.getResponseBody();
                             if (id != 0) {
                                 manager.updateSubtask(subtask, id);
-                                outputStream.write(("Обновили SubTask c id " + id).getBytes(StandardCharsets.UTF_8));
-                                outputStream.write((gson.toJson(subtask).getBytes()));
+                                httpExchange.sendResponseHeaders(201, 0);
                             } else {
                                 manager.createSubTask(subtask);
-                                outputStream.write(("Создали SubTask").getBytes(StandardCharsets.UTF_8));
-                                outputStream.write((gson.toJson(subtask).getBytes()));
+                                httpExchange.sendResponseHeaders(201, 0);
                             }
+                            OutputStream outputStream = httpExchange.getResponseBody();
+                            outputStream.write((gson.toJson(subtask).getBytes()));
                             outputStream.close();
                         }
                     } catch (IOException e) {
@@ -277,7 +264,6 @@ public class HttpTaskServer {
                     if (path.endsWith("subtask") && (pathLength == 3)) {
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
-                            outputStream.write(("Получили все SubTask").getBytes(StandardCharsets.UTF_8));
                             outputStream.write(gson.toJson(manager.getAllSubtasks()).getBytes(StandardCharsets.UTF_8));
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -286,7 +272,6 @@ public class HttpTaskServer {
                     } else if (pathRequest.startsWith("id=") && (pathLength == 3)) {
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
-                            outputStream.write(("Получили SubTask c id " + id).getBytes(StandardCharsets.UTF_8));
                             outputStream.write(gson.toJson(manager.getSubtaskByID(id)).getBytes(StandardCharsets.UTF_8));
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -300,10 +285,9 @@ public class HttpTaskServer {
                     break;
                 case "DELETE":
                     if (path.endsWith("subtask") && (pathLength == 3)) {
-                        httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
                             manager.deleteAllSubTasks();
-                            outputStream.write(("Все SubTask удалены").getBytes(StandardCharsets.UTF_8));
+                            httpExchange.sendResponseHeaders(200, 0);
                         } catch (IOException e) {
                             e.printStackTrace();
                             httpExchange.sendResponseHeaders(404, 0);
@@ -312,7 +296,7 @@ public class HttpTaskServer {
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
                             manager.deleteSubtaskById(id);
-                            outputStream.write(("SubTask с id = " + id + " удалена").getBytes(StandardCharsets.UTF_8));
+                            httpExchange.sendResponseHeaders(200, 0);
                         } catch (IOException e) {
                             e.printStackTrace();
                             httpExchange.sendResponseHeaders(404, 0);
@@ -349,7 +333,6 @@ public class HttpTaskServer {
                 if (pathRequest.startsWith("id=") && pathLength == 4) {
                     httpExchange.sendResponseHeaders(200, 0);
                     try (OutputStream outputStream = httpExchange.getResponseBody()) {
-                        outputStream.write(("Получили все SubTask у Epic id = " + id).getBytes(StandardCharsets.UTF_8));
                         outputStream.write(gson.toJson(manager.getEpicByID(id).getSubTaskId().toArray()).getBytes(StandardCharsets.UTF_8));
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -381,7 +364,6 @@ public class HttpTaskServer {
                 if (path.endsWith("history") && (pathLength == 3)) {
                     httpExchange.sendResponseHeaders(200, 0);
                     try (OutputStream outputStream = httpExchange.getResponseBody()) {
-                        outputStream.write(("Получаем список History").getBytes());
                         outputStream.write(gson.toJson(manager.getHistory()).getBytes(StandardCharsets.UTF_8));
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -414,7 +396,6 @@ public class HttpTaskServer {
                 if (path.endsWith("tasks") && (pathLength == 2)) {
                     httpExchange.sendResponseHeaders(200, 0);
                     try (OutputStream outputStream = httpExchange.getResponseBody()) {
-                        outputStream.write(("Получаем список задач по приоритету").getBytes());
                         outputStream.write(gson.toJson(manager.getPrioritizedTasks()).getBytes(StandardCharsets.UTF_8));
                     } catch (IOException e) {
                         e.printStackTrace();
