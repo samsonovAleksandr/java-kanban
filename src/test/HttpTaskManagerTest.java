@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HttpTaskManagerTest  {
+public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
 
     HttpTaskServer server;
 
@@ -46,6 +46,8 @@ public class HttpTaskManagerTest  {
         server.start();
 
         client = HttpClient.newHttpClient();
+
+        taskManager = new HttpTaskManager("http://localhost:8078");
     }
 
     @AfterEach
@@ -53,6 +55,7 @@ public class HttpTaskManagerTest  {
         kvServer.stop();
         server.stop();
     }
+
 
     @Test
     void createTask() throws IOException, InterruptedException {

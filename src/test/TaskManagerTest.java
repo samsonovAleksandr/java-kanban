@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import service.TaskManager;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +42,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void createSubTask() {
+    void createSubTask() throws IOException, InterruptedException {
         taskManager.createEpic(new Epic("test", TaskStatus.NEW, "TestDes"));
         taskManager.createSubTask(new SubTask("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01, 31, 18, 00), 60, 1));

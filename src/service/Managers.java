@@ -10,9 +10,7 @@ import java.io.IOException;
 public abstract class Managers implements TaskManager {
 
     public static TaskManager getDefault() {
-        return //new InMemoryTaskManager();
-
-                new HttpTaskManager("http://localhost:8078");
+        return new HttpTaskManager("http://localhost:8078");
     }
 
     public static KVServer getDefaultKVServer() throws IOException {

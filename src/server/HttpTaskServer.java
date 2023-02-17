@@ -1,13 +1,13 @@
 package server;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import model.Epic;
 import model.SubTask;
 import model.Task;
+import service.InMemoryTaskManager;
 import service.Managers;
 import service.TaskManager;
 
@@ -28,11 +28,11 @@ public class HttpTaskServer {
 
 
     public HttpTaskServer() throws IOException {
-        manager = Managers.getFileBTM();
+        manager = Managers.getDefault();
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
-        httpServer = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
+        httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TasksHandler());
         httpServer.createContext("/tasks/task", new TaskHandler());
         httpServer.createContext("/tasks/subtask", new SubtaskHandler());
@@ -55,7 +55,7 @@ public class HttpTaskServer {
             switch (requestMethod) {
                 case "GET":
                     if (path.endsWith("task") && (pathLength == 3)) {
-                        httpExchange.sendResponseHeaders(200,0);
+                        httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
                             outputStream.write(("Список всех Task").getBytes(StandardCharsets.UTF_8));
                             outputStream.write(gson.toJson(manager.getTasks()).getBytes(StandardCharsets.UTF_8));
@@ -83,20 +83,25 @@ public class HttpTaskServer {
                 case "POST":
                     try (inputStream) {
                         String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                        JsonElement jsonElement = JsonParser.parseString(body);
+                        if (!jsonElement.isJsonObject()) {
+                            throw new RuntimeException("Это не jsonObject");
+                        }
+                        JsonObject jsonObject = jsonElement.getAsJsonObject();
+                        Task task = gson.fromJson(jsonObject, Task.class);
+
                         if (path.endsWith("task") && (pathLength == 3)) {
-                            Task task = gson.fromJson(body, Task.class);
+                            httpExchange.sendResponseHeaders(201, 0);
                             int id = Integer.parseInt(pathRequest.split("=")[1]);
-                            httpExchange.sendResponseHeaders(201,0);
                             OutputStream outputStream = httpExchange.getResponseBody();
                             if (id != 0) {
                                 manager.updateTask(task, id);
                                 outputStream.write(("Обновили Task c id " + id).getBytes(StandardCharsets.UTF_8));
-                                outputStream.write((gson.toJson(task).getBytes()));
                             } else {
                                 manager.createTask(task);
                                 outputStream.write(("Создана новая Task").getBytes(StandardCharsets.UTF_8));
-                                outputStream.write((gson.toJson(task).getBytes()));
                             }
+                            outputStream.write((gson.toJson(task).getBytes()));
                             outputStream.close();
                         }
                     } catch (IOException e) {
@@ -435,7 +440,7 @@ public class HttpTaskServer {
     }
 
     public void stop() {
-        System.out.println("Остаавливаем сервер на порту " + PORT);
+        System.out.println("Останавливаем сервер на порту " + PORT);
         httpServer.stop(0);
     }
 }

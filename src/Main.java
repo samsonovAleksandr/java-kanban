@@ -16,13 +16,13 @@ import static service.FileBackedTasksManager.loadFromFile;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        KVServer kvServer = new KVServer();
+        kvServer.start();
 
 
         HttpTaskServer taskServer = new HttpTaskServer();
         taskServer.start();
 
-       // KVServer kvServer = new KVServer();
-       // kvServer.start();
 
     }
 }

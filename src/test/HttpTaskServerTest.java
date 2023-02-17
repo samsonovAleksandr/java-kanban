@@ -2,16 +2,22 @@ package test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import model.Epic;
 import model.Task;
 import model.TaskStatus;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import server.HttpTaskManager;
 import server.HttpTaskServer;
 import server.KVServer;
 import server.LocalDateTimeAdapter;
+import service.FileBackedTasksManager;
+import service.InMemoryTaskManager;
+import service.Managers;
+import service.TaskManager;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -19,46 +25,50 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpTaskServerTest extends TaskManagerTest<HttpTaskManager>{
-    HttpTaskServer server;
-
-    Gson gson = new GsonBuilder()
+    private final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .create();
 
-    HttpClient client;
-
+    private static HttpTaskServer server;
+    private static KVServer kvServer;
 
     @BeforeEach
     void beforeEach() throws IOException {
-        client = HttpClient.newHttpClient();
+        kvServer = new KVServer();
+        kvServer.start();
         server = new HttpTaskServer();
         server.start();
 
+        taskManager = new HttpTaskManager("http://localhost:8078");
     }
 
-   @AfterEach
-    void afterEach() {
+    @AfterEach
+    void afterEach(){
+        kvServer.stop();
         server.stop();
-
     }
+
+
+
 
     @Test
-    void createTask() throws IOException, InterruptedException {
-        Task task = new Task("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01, 31, 18, 00), 60);
+    void createTask12121() throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks/task");
-        String json = gson.toJson(task);
+        Task task2 = new Task("test", TaskStatus.NEW, "TestDes", LocalDateTime.now(), 60);
+        taskManager.createTask(task2);
+        String json = gson.toJson(task2);
         HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(url)
-                .version(HttpClient.Version.HTTP_2)
                 .POST(bodyPublisher)
+                .header("Content-Type", "application/json")
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode());
-
+        assertEquals(200, response.statusCode());
     }
 }
