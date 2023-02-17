@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class HttpTaskServer {
 
     private static TaskManager manager;
-    private static Gson gson;
+    private final Gson gson;
     private final HttpServer httpServer;
     private static final int PORT = 8080;
 
@@ -41,7 +41,7 @@ public class HttpTaskServer {
     }
 
 
-    static class TaskHandler implements HttpHandler {
+    class TaskHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -139,7 +139,7 @@ public class HttpTaskServer {
         }
     }
 
-    static class EpicHandler implements HttpHandler {
+    class EpicHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -225,7 +225,7 @@ public class HttpTaskServer {
         }
     }
 
-    static class SubtaskHandler implements HttpHandler {
+    class SubtaskHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -319,7 +319,7 @@ public class HttpTaskServer {
         }
     }
 
-    static class SubtasksByEpicHandler implements HttpHandler {
+    class SubtasksByEpicHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -353,7 +353,7 @@ public class HttpTaskServer {
         }
     }
 
-    static class HistoryHandler implements HttpHandler {
+    class HistoryHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -384,7 +384,7 @@ public class HttpTaskServer {
         }
     }
 
-    static class TasksHandler implements HttpHandler {
+    class TasksHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {

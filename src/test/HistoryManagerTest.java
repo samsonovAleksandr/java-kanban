@@ -29,11 +29,11 @@ class HistoryManagerTest {
         task = new Task("test", TaskStatus.NEW, "TestDes",
                 LocalDateTime.of(2023, 01,31,18,00), 60);
         task1 = new Task("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01,31,18,00), 60);
+                LocalDateTime.of(2022, 01,31,18,00), 60);
         epic = new Epic("test", TaskStatus.NEW, "TestDes");
         epic1 = new Epic("test", TaskStatus.NEW, "TestDes");
         subTask = new SubTask("test", TaskStatus.NEW, "TestDes",
-                LocalDateTime.of(2023, 01,31,18,00), 60, 3);
+                LocalDateTime.of(2021, 01,31,18,00), 60, 3);
         taskManager.createTask(task);
         taskManager.createTask(task1);
         taskManager.createEpic(epic);
@@ -78,7 +78,7 @@ class HistoryManagerTest {
     void removeIncorredIdTask(){
         taskManager.getTaskByID(1);
         taskManager.getTaskByID(2);
-        taskManager.deleteTaskById(3);
-        assertEquals(2, taskManager.getHistory().size());
+        taskManager.deleteTaskById(2);
+        assertEquals(1, taskManager.getHistory().size());
     }
 }

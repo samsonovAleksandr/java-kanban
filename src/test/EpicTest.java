@@ -27,7 +27,7 @@ class EpicTest {
         taskManager.createSubTask(new SubTask("TestSub", TaskStatus.NEW, "DisTestSub",
                 LocalDateTime.of(2023, 01,31,18,00), 60, 1));
         taskManager.createSubTask(new SubTask("TestSub1", TaskStatus.NEW, "DisTestSub1",
-                LocalDateTime.of(2023, 01,31,18,00), 60, 1));
+                LocalDateTime.of(2022, 01,31,18,00), 60, 1));
         assertEquals(TaskStatus.NEW, epic.getStatus());
     }
 
