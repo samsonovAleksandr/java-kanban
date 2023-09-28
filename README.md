@@ -25,7 +25,7 @@
 
 <img src="src/resources/history_task_manager.png" width="80%"/>
 
->### Диаграмма классов
+## Диаграмма классов
 
 <img src="src/resources/diagram.png" width="200%"/>
 
